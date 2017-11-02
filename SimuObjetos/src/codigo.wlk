@@ -1,9 +1,23 @@
 class Empleado{
-	var estamina
+	var estamina = 0
 	var rol
+	var dificultadAcumulada
+	var tareasRealizadas = #{}
 	constructor(_estamina,_rol){
 		estamina = _estamina
 		rol = _rol
+	}
+	method comerFruta(fruta){
+		estamina += fruta.puntosDeEstamina()
+	}
+	method experiencia(){
+		return tareasRealizadas.size() * self.dificultadAcumulada()
+	}
+	method arreglarMaquina(){
+		
+	}
+	method hacerTarea(){
+		
 	}
 	method cambiarRol(nuevoRol){
 		rol = nuevoRol	
@@ -13,6 +27,9 @@ class Empleado{
 	}
 	method rol(){
 		return rol
+	}
+	method dificultadAcumulada(){
+		return tareasRealizadas.sum({t=>t.dificultad(self)})
 	}
 }
 
@@ -66,3 +83,17 @@ method arreglarMaquina(empleado,maquina){
  	if(empleado.rol() =! new Mucama())
  }
 }
+
+class Fruta{
+	var puntos
+	constructor(_puntos){
+		puntos = _puntos
+		}
+		method puntosDeEstamina(){
+			return puntos
+		}
+	}
+
+object manzana inherits Fruta(5){}
+object banana inherits Fruta(10){}
+object uva inherits Fruta(1){}

@@ -1,7 +1,9 @@
-// Acá los tests
 
+describe "Test parcial minions"{
+var kevin = new Empleado()
 test "testX" {
+kevin.comerFruta(manzana)
+	assert.equals(esperado, kevin.estamina()){}
 
-	assert.that(true)
-
+}
 }
