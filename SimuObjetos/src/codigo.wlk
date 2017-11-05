@@ -1,11 +1,16 @@
+class UserException inherits wollok.lang.Exception {
+	constructor(_mensaje) = super(_mensaje)
+}
 class Empleado{
 	var estamina = 0
 	var rol
 	var dificultadAcumulada
 	var tareasRealizadas = #{}
-	constructor(_estamina,_rol){
+	var herramientas
+	constructor(_estamina,_rol,_herramientas){
 		estamina = _estamina
 		rol = _rol
+		herramientas = _herramientas
 	}
 	method comerFruta(fruta){
 		estamina += fruta.puntosDeEstamina()
@@ -13,11 +18,10 @@ class Empleado{
 	method experiencia(){
 		return tareasRealizadas.size() * self.dificultadAcumulada()
 	}
-	method arreglarMaquina(){
-		
-	}
-	method hacerTarea(){
-		
+	method hacerTarea(tarea){
+		if (tarea.cumpleRequisito(self)){
+			tareasRealizadas.add(tarea)
+		} return throw new UserException("No cumple con los requisitos de dicha tarea")
 	}
 	method cambiarRol(nuevoRol){
 		rol = nuevoRol	
@@ -29,9 +33,63 @@ class Empleado{
 		return rol
 	}
 	method dificultadAcumulada(){
-		return tareasRealizadas.sum({t=>t.dificultad(self)})
+		return tareasRealizadas.sum({tarea=>tarea.dificultad(self)})
+	}
+	method herramientas(){
+		return herramientas
+	}
+	method fuerza(){
+		return estamina/2 + 2
+		
 	}
 }
+class Maquina{
+	var complejidad
+	var herramientasReparacion
+	constructor(_complejidad,_herramientasReparacion){
+		complejidad = _complejidad
+		herramientasReparacion = _herramientasReparacion
+	}
+	method complejidad(){
+		return complejidad
+	}
+	method herremientasReparacion(){
+		return herramientasReparacion
+	}
+}
+class Sector{
+	var amenaza
+	constructor(_amenaza){
+		amenaza = _amenaza
+	}
+	method amenaza(){
+		return amenaza
+	}
+}
+
+class Tarea{
+	method cumpleRequisito(empleado)
+	method dificultad(empleado)
+	method perderEstamina(empleado)
+}
+
+class ArreglarMaquina inherits Tarea{
+	var maquina
+	constructor(_maquina) {
+		maquina = _maquina
+	}
+	override method cumpleRequisito(empleado){
+		return empleado.estamina() >= maquina.complejidad() && (empleado.herramientas().contains(maquina.herramientasReparacion()))	
+	}
+	override method dificultad(empleado){
+		return 2* maquina.complejidad()
+	}
+	override method perderEstamina(empleado){
+		return  empleado.estamina() - maquina.complejidad() 
+	}
+}
+class DefenderSector inherits Tarea{}
+class LimpiarSector inherits Tarea{}
 
 class Biclopes inherits Empleado{
 }
@@ -60,28 +118,6 @@ class Obrero{
 }
 class Mucama{
 	
-}
-
-class Maquina{
-	var complejidad
-	constructor(_complejidad){
-		complejidad = _complejidad
-	}
-	method complejidad(){
-		return complejidad
-	}
-}
-
-object laboratorio{
-	var sectores
-method arreglarMaquina(empleado,maquina){
-	if(empleado.estamina() == maquina.complejidad() && empleado.herramientas().contains(maquina.herramientasDeReparacion())){
-		empleado.estamina() -= maquina.complejidad()
-	} // Lanzar una excepcion	
- } 
- method defenderSector(empleado,sector){
- 	if(empleado.rol() =! new Mucama())
- }
 }
 
 class Fruta{
